@@ -7,45 +7,45 @@ function XrpToDogConverter() {
 XrpToDogConverter.prototype = {
   convert: function(options) {
     var _this = this;
-    var resolver = Promise.pending();
-    _this._convertXrpToBtcWithRippleCharts(options.xrp).then(function(btc) {
-      _this._convertBtcToDogWithCryptsy(btc).then(function(dog) {
-        resolver.resolve({
-          xrp: options.xrp,
-          dog: dog
+    return new Promise(function(resolve, reject) {
+      _this._convertXrpToBtcWithRippleCharts(options.xrp).then(function(btc) {
+        _this._convertBtcToDogWithCryptsy(btc).then(function(dog) {
+          resolve({
+            xrp: options.xrp,
+            dog: dog
+          });
         });
       });
-    })
-    return resolver.promise;
+    });
   },
 
   _convertXrpToBtcWithRippleCharts: function(xrp) {
-    var resolver = Promise.pending();
-    http
-      .post('http://api.ripplecharts.com/api/exchange_rates')
-      .send(query)
-      .end(function(error, response) {
-        if (error) {
-          resolver.reject(error);
-        } else {
-          resolver.resolve(xrp / response.body[0].rate);
-        }
-      });
-    return resolver.promise;
+    return new Promise(function(resolve, reject) {
+      http
+        .post('http://api.ripplecharts.com/api/exchange_rates')
+        .send(query)
+        .end(function(error, response) {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(xrp / response.body[0].rate);
+          }
+        });
+    });
   },
 
   _convertBtcToDogWithCryptsy: function(btc) {
-    var resolver = Promise.pending();
-    http
-      .get('http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=132')
-      .end(function(error, response) {
-        if (error) {
-          resolver.reject(error);
-        } else {
-          resolver.resolve(btc / response.body.return.markets.DOGE.lasttradeprice);
-        }
-      });
-    return resolver.promise;
+    return new Promise(function(resolve, reject) {
+      http
+        .get('http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=132')
+        .end(function(error, response) {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(btc / response.body.return.markets.DOGE.lasttradeprice);
+          }
+        });
+    });
   }
 }
 
