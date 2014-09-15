@@ -1,6 +1,6 @@
 {
-  "name": "dogecoin-trading-bot",
-  "version": "0.1.0",
+  "name": "xrp-to-dogecoin-price",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
